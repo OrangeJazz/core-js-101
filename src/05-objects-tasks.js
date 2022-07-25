@@ -24,9 +24,10 @@ function Rectangle(width, height) {
   const res = {};
   res.width = width;
   res.height = height;
-  res.getArea = function () {
+  function area() {
     return this.width * this.height;
-  };
+  }
+  res.getArea = area;
   return res;
 }
 
