@@ -267,8 +267,25 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  let numbers = ccn.toString().split('').reverse();
+  numbers.unshift('0');
+  numbers = numbers
+    .map((el) => Number(el))
+    .map((el, i) => {
+      if (i % 2 === 0) {
+        const num = el * 2;
+        if (String(num).length === 2) {
+          return String(num).split('').reduce((acc, val) => acc + +val, 0);
+        } return num;
+      }
+      return el;
+    })
+    .reduce((acc, el) => acc + el);
+  if (numbers % 10 === 0) {
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -285,8 +302,10 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  const res = num.toString().split('').reduce((a, b) => Number(a) + Number(b), 0);
+  if (res > 9) return getDigitalRoot(res);
+  return res;
 }
 
 
@@ -311,8 +330,34 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  if (str.length % 2 !== 0) return false;
+  if (str.length === 0) return true;
+  const stack = [];
+  for (let i = 0; i < str.length; i += 1) {
+    if (str[i] === '(' || str[i] === '[' || str[i] === '{' || str[i] === '<') {
+      stack.push(str[i]);
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    if (stack.length === 0) return false;
+    const check = stack.pop();
+    switch (str[i]) {
+      case ')':
+        if (check !== '(') return false;
+        break;
+      case '}':
+        if (check !== '{') return false;
+        break;
+      case ']':
+        if (check !== '[') return false;
+        break;
+      default:
+        if (check !== '<') return false;
+        break;
+    }
+  }
+  return (stack.length === 0);
 }
 
 
@@ -336,8 +381,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -353,8 +398,15 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const res = [];
+  const arr = pathes.map((el) => [...el.split('/')]);
+  arr[0].forEach((el, i) => {
+    if (arr.every((dir) => dir[i] === el)) {
+      res.push(`${el}/`);
+    }
+  });
+  return `${res.join('')}`;
 }
 
 
@@ -376,8 +428,18 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = [];
+  for (let i = 0; i < m1.length; i += 1) {
+    result.push([]);
+    for (let j = 0; j < m2[0].length; j += 1) {
+      result[i][j] = m1[i].reduce((acc, el, index) => {
+        acc.sum += el * m2[index][j];
+        return acc;
+      }, { sum: 0 }).sum;
+    }
+  }
+  return result;
 }
 
 
@@ -411,8 +473,18 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  let win;
+  position.forEach((el, i) => {
+    if (el[0] === el[1] && el[1] === el[2]) win = el['0'];
+    if (
+      position[0][i] === position[1][i]
+      && position[1][i] === position[2][i]
+    ) { win = position[0][i]; }
+  });
+  if (position[0][0] === position[1][1] && position[1][1] === position[2][2]) { win = position['0']['0']; }
+  if (position[2][0] === position[1][1] && position[1][1] === position[0][2]) { win = position['2']['0']; }
+  return win;
 }
 
 
